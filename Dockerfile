@@ -1,5 +1,7 @@
 FROM webdevops/php-nginx:8.0-alpine
 
+RUN rm -rf /app/*
+
 USER 1000
 
 ENV WEB_DOCUMENT_ROOT=/app/public
