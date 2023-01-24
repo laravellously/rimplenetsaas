@@ -10,3 +10,7 @@ COPY --chown=application:application . /app
 WORKDIR /app
 
 RUN composer install --optimize-autoloader --no-dev
+
+RUN cd storage/framework && mkdir sessions && mkdir cache
+
+RUN chmod -R 775 storage/*
