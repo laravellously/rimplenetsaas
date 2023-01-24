@@ -5,6 +5,6 @@ USER 1000
 # Copy code to /var/www
 COPY --chown=www-data:www-data . /app
 
-RUN composer install --optimize-autoloader --no-dev
+RUN cd /app && composer install --optimize-autoloader --no-dev
 
 WORKDIR /app/public
