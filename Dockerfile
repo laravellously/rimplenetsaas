@@ -1,27 +1,37 @@
-FROM webdevops/php-nginx:8.0-alpine
+FROM php:8.0-fpm
 
-USER 1000
+# Arguments defined in docker-compose.yml
+ARG user
+ARG uid
 
-## Cleanout previous dev just in case
-# RUN rm -rf /app/*
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip
 
-ADD . /app
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Create system user to run Composer and Artisan Commands
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN mkdir -p /home/$user/.composer && \
+    chown -R $user:$user /home/$user
+
+# Set working directory
+WORKDIR /var/www
+
+USER $user
 
 RUN composer install --no-ansi --no-scripts --prefer-dist --no-progress --no-interaction \
       --optimize-autoloader
-
-WORKDIR /app/public
-
-# USER root
-
-RUN find /usr/share/GeoIP -not -user www-data -execdir chown "www-data:" {} \+ && \
-    find /app -not -user www-data -execdir chown "www-data:" {} \+
-
-#HEALTHCHECK \
-#  --interval=30s \
-#  --timeout=60s \
-#  --retries=10 \
-#  --start-period=60s \
-#  CMD if [[ "$(curl -f http://127.0.0.1/ | jq -e . >/dev/null 2>&1)" != "0" ]]; then exit 1; else exit 0; fi
