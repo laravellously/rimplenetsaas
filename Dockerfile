@@ -2,9 +2,11 @@ FROM webdevops/php-nginx:8.0-alpine
 
 USER 1000
 
+ENV WEB_DOCUMENT_ROOT=/app/public
+
 # Copy code to /var/www
 COPY --chown=application:application . /app
 
-RUN cd /app && composer install --optimize-autoloader --no-dev
+WORKDIR /app
 
-WORKDIR /app/public
+RUN composer install --optimize-autoloader --no-dev
