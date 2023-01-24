@@ -62,7 +62,7 @@
 
         <div class="relative z-20 flex flex-col items-start justify-start px-8 mx-auto sm:items-center max-w-7xl xl:px-5">
             <h2 class="text-4xl font-medium leading-9 text-white">Awesome Features</h2>
-            <p class="mt-4 leading-6 sm:text-center text-wave-200">Wave has some cool features to help you rapidly build your Software as a Service.<br class="hidden md:block"> Here are a few awesome features you're going to love!</p>
+            <p class="mt-4 leading-6 sm:text-center text-wave-200">Rimplenet has some cool features to help you rapidly build your own apps.<br class="hidden md:block"> Here are a few awesome features you're going to love!</p>
 
             <div class="grid mt-16 gap-y-10 sm:grid-cols-2 sm:gap-x-8 md:gap-x-12 lg:grid-cols-3 xl:grid-cols-4 lg:gap-20">
                 @foreach(config('features') as $feature)
@@ -96,7 +96,7 @@
         <div class="relative z-20 px-8 pb-8 mx-auto max-w-7xl xl:px-5">
             <div class="w-full text-left sm:text-center">
                 <h2 class="pt-12 text-4xl font-extrabold text-gray-900 lg:text-5xl">Pricing</h2>
-                <p class="w-full my-1 text-base text-left text-gray-900 opacity-75 sm:my-2 sm:text-center sm:text-xl">It's easy to customize the pricing of your Rimplenet as a Service</p>
+                {{-- <p class="w-full my-1 text-base text-left text-gray-900 opacity-75 sm:my-2 sm:text-center sm:text-xl">It's easy to customize the pricing of your Rimplenet as a Service</p> --}}
             </div>
 
             @include('theme::partials.plans')
