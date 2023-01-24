@@ -12,6 +12,6 @@ USER 1000
 COPY . /app
 
 # add root to www group
-RUN chmod -R ug+w /app/storage
+# RUN chmod -R ug+w /app/storage
 
 RUN composer install --optimize-autoloader --no-dev
