@@ -127,10 +127,6 @@ class SubscriptionController extends Controller
                     } else {
                         $user = auth()->user();
                     }
-
-                     // create a new server
-                    $portainer = new PortainerController;
-                    $portainer->create();
                      // create a new api key
                     $user->createApiKey('rimplenet_default');
 

@@ -31,7 +31,7 @@ Wave::routes();
 
 // Voyager Admin routes
 Route::group(['name' => 'rimplenet.*'], function () {
-    Route::view('users','wave.dashboard.')
+    Route::view('users','wave.dashboard.users')->name('users');
 });
 
 

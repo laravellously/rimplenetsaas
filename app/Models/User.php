@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
 use Wave\User as Authenticatable;
 
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'verification_code',
         'verified',
         'trial_ends_at',
+        'site_url'
     ];
 
     /**

@@ -2,22 +2,38 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\RimplenetController;
+use App\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class WalletComponent extends Component
 {
-    public $wallets = [];
-    public $url = 'https://test1.kubectl.bluudigital.com/wp-json/rimplenet/v1';
+    use WithPagination;
 
-    public function mount(){
-        $resp = Http::get($this->url.'/wallets');
-        $body = json_decode($resp->body());
-        $this->wallets = $body->data;
+    protected $listeners = ['walletDeleted' => 'render'];
+
+    public function getWallets(){
+        return app(RimplenetController::class)->getWallets();
+    }
+
+    public function deleteWallet($id){
+        app(RimplenetController::class)->deleteWallet($id);
+        $this->emit('walletDeleted');
+    }
+
+    public function createTestWallet()
+    {
+        app(RimplenetController::class)->createTestWallet();
+        $this->emit('walletDeleted');
     }
 
     public function render()
     {
-        return view('livewire.wallet-component');
+        $wallets = $this->getWallets();
+        return view('livewire.wallet-component', [
+            "wallets" => $wallets
+        ]);
     }
 }
