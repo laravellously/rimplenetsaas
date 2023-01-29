@@ -2,8 +2,7 @@
 
 namespace App\Http\Livewire;
 
-
-
+use App\Http\Controllers\RimplenetController;
 use Livewire\Component;
 use Livewire\WithPagination;
 

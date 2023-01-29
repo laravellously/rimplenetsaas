@@ -129,7 +129,7 @@ class PortainerController extends Controller
                     wp plugin delete hello
                     wp plugin delete akismet
                     wp plugin install woocommerce --activate
-                    wp plugin install https://github.com/laravellously/rimplenet-saas/archive/refs/heads/master.zip --activate
+                    wp plugin install ".env('RIMPLENET_PLUGIN_URL')." --activate
                 "],
                 'User' => 'www-data',
             ]);

@@ -7,14 +7,16 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class RimplenetController extends Controller
 {
     // Users
-    public function getUsers(): Collection
+    public function getUsers(): Collection | LengthAwarePaginator
     {
         $resp = Http::get(Auth::user()->site_url.'/users');
         $body = json_decode($resp->body());
+        // remove admin user
         return $body->status_code == 404 ? Collection::empty() : Collection::make($body->data->users)->paginate(3);
     }
 
