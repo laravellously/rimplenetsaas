@@ -11,7 +11,6 @@
 |
 */
 
-use App\Http\Controllers\PortainerController;
 use App\Http\Controllers\RimplenetController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -29,14 +28,8 @@ Route::group(['prefix' => config('voyager.prefix', 'admin')], function () {
 // Wave routes
 Wave::routes();
 
-// Voyager Admin routes
-Route::group(['name' => 'rimplenet.*'], function () {
-    Route::view('users','wave.dashboard.users')->name('users');
+Route::controller(RimplenetController::class)->name('rimplenet.')->middleware('wave')->group(function () {
+    Route::view('users', 'theme::dashboard.users')->name('users');
+    Route::view('wallets','theme::dashboard.wallets')->name('wallets');
+    Route::view('transactions','theme::dashboard.transactions')->name('transactions');
 });
-
-
-Route::get('rimplenet', [RimplenetController::class, 'create'])->name('rimplenet');
-Route::get('portainer', [PortainerController::class, 'createWPContainer'])->name('portainer');
-
-
-Route::get('site', [RimplenetController::class, 'test']);

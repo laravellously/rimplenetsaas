@@ -6,6 +6,7 @@ use App\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class RimplenetController extends Controller
 {
@@ -72,9 +73,9 @@ class RimplenetController extends Controller
     {
         Http::post(Auth::user()->site_url.'/wallets', [
             'wallet_name' => 'Test Wallet',
-            'wallet_id' => 'test',
+            'wallet_id' => Str::random(4),
             'wallet_symbol' => '$',
-            'wallet_note' => 'A Wallet created by me',
+            'wallet_note' => 'Test Wallet '.Str::random(6),
             'wallet_type' => 'fiat'
         ]);
         return true;
