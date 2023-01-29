@@ -35,10 +35,11 @@ class RimplenetController extends Controller
 
     public function createTestUser()
     {
+        $rnd = Str::random(6);
         Http::post(Auth::user()->site_url.'/users', [
-            'user_email' => 'iamtest@change.me',
+            'user_email' => $rnd.'@rimplenet.com',
             'user_password' => 'ch@ngeme0bvi0usly',
-            'username' => 'iamtest'
+            'username' => $rnd
         ]);
         return true;
     }
