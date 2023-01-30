@@ -32,13 +32,13 @@ class PortainerController extends Controller
                 ],
             ]);
             $cont_body = json_decode($cont->body());
-            echo $cont_body;
             if($cont_body->Id !== null){
                 Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $cont_body->Id . '/start');
                 $this->installCli($cont_body->Id);
                 $this->installWoo($cont_body->Id, $url);
             } else {
                 // retry
+                echo "No Id Found";
             }
 
 
@@ -132,6 +132,7 @@ class PortainerController extends Controller
             $cont = Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $id . '/exec', [
                 'Cmd' => ["sh", "-c", "
                     wp core install --url=https://".$url." --title=Rimplenet --admin_name=admin --admin_password=admin --admin_email=you@domain.com
+                    wp rewrite structure '/%postname%/'
                     wp plugin delete hello
                     wp plugin delete akismet
                     wp plugin install woocommerce --activate
