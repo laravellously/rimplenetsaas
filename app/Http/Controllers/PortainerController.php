@@ -48,7 +48,7 @@ class PortainerController extends Controller
             ]);
             $site->saveQuietly();
 
-            $user->site_url = $url . "/wp-json/rimplenet/v1";
+            $user->site_url = "https://" . $url . "/wp-json/rimplenet/v1";
             $user->saveQuietly();
 
             return true;
