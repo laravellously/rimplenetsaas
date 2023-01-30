@@ -19,43 +19,36 @@ class PortainerController extends Controller
             $url = $name . ".kubectl.bluudigital.com";
             $cont = Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/create?name=' . $name, [
                 'Image' => 'wordpress',
-                // 'Env' => [
-                //     "WORDPRESS_CONFIG_EXTRA=define('FORCE_SSL_ADMIN', true);",
-                //     "WORDPRESS_DB_HOST=65.108.95.193:6666",
-                //     "WORDPRESS_DB_USER=" . $credentials[0],
-                //     "WORDPRESS_DB_PASSWORD=" . $credentials[1],
-                //     "WORDPRESS_DB_NAME=" . $credentials[2],
-                //     "VIRTUAL_HOST=" . $url,
-                //     "LETSENCRYPT_HOST=" . $url
-                // ],
+                'Env' => [
+                    "WORDPRESS_CONFIG_EXTRA=define('FORCE_SSL_ADMIN', true);",
+                    "WORDPRESS_DB_HOST=65.108.95.193:6666",
+                    "WORDPRESS_DB_USER=" . $credentials[0],
+                    "WORDPRESS_DB_PASSWORD=" . $credentials[1],
+                    "WORDPRESS_DB_NAME=" . $credentials[2],
+                    "VIRTUAL_HOST=" . $url,
+                    "LETSENCRYPT_HOST=" . $url
+                ],
             ]);
-            $cont_body = json_decode($cont->body(), true);
-            dump($cont);
-            dump($cont_body);
-            // $cont_id = $cont_body["Id"];
-            // if ($cont_id !== null) {
-            //     Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $cont_id . '/start');
-            //     $this->installCli($cont_id);
-            //     $this->installWoo($cont_id, $url);
-            // } else {
-            //     // retry
-            //     echo "No Id Found";
-            // }
+            $cont_body = json_decode($cont->body());
+            $cont_id = $cont_body->Id;
+            Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $cont_id . '/start');
+            $this->installCli($cont_id);
+            $this->installWoo($cont_id, $url);
 
-            // // Save site: url, container_id, credentials
-            // $site = new Site();
-            // $site->fill([
-            //     'name' => $name,
-            //     'container_id' => $cont_id,
-            //     'db_user' => $credentials[0],
-            //     'db_password' => $credentials[1],
-            //     'db_name' => $credentials[2],
-            //     'user_id' => $user->id
-            // ]);
-            // $site->saveQuietly();
+            // Save site: url, container_id, credentials
+            $site = new Site();
+            $site->fill([
+                'name' => $name,
+                'container_id' => $cont_id,
+                'db_user' => $credentials[0],
+                'db_password' => $credentials[1],
+                'db_name' => $credentials[2],
+                'user_id' => $user->id
+            ]);
+            $site->saveQuietly();
 
-            // $user->site_url = "https://" . $url . "/wp-json/rimplenet/v1";
-            // $user->saveQuietly();
+            $user->site_url = "https://" . $url . "/wp-json/rimplenet/v1";
+            $user->saveQuietly();
 
             return true;
         } else {
@@ -72,7 +65,6 @@ class PortainerController extends Controller
                 'Password' => env('PORTAINER_PASSWORD')
             ]);
 
-            // // TODO: Check for error
             $body = json_decode($response->body());
 
             Cache::put('PORTAINER_JWT', $body->jwt, 60 * 60 * 8);
@@ -148,8 +140,6 @@ class PortainerController extends Controller
                     "Detach" => false,
                     "Tty" => false
                 ]);
-                // $stat = Http::withToken($jwt)->get(env('PORTAINER_URL') . '/api/endpoints/2/docker/exec/' . $decoded_cont_body->Id . '/json');
-                // dump(json_decode($stat->body()));
             }
             return true;
         } catch (\Exception $e) {
@@ -180,8 +170,6 @@ class PortainerController extends Controller
                     "Detach" => false,
                     "Tty" => false
                 ]);
-                // $stat = Http::withToken($jwt)->get(env('PORTAINER_URL') . '/api/endpoints/2/docker/exec/' . $decoded_cont_body->Id . '/json');
-                // dump(json_decode($stat->body()));
             }
             return true;
         } catch (\Exception $e) {
