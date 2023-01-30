@@ -13,4 +13,4 @@ RUN cd storage/framework && mkdir sessions && mkdir cache
 
 RUN chmod -R 775 storage/*
 
-RUN composer install --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
+RUN composer install --optimize-autoloader --no-dev --ignore-platform-reqs
