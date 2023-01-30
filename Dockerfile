@@ -4,6 +4,9 @@ USER 1000
 
 ENV WEB_DOCUMENT_ROOT=/app/public
 
+# Custom cache invalidation
+ARG CACHEBUST=1
+
 # Copy code to /var/www
 COPY --chown=application:application . /app
 
