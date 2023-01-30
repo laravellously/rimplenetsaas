@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Site;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -31,31 +29,31 @@ class PortainerController extends Controller
                     "LETSENCRYPT_HOST=" . $url
                 ],
             ]);
-            $cont_body = json_decode($cont->body());
-            if($cont_body->Id !== null){
-                Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $cont_body->Id . '/start');
-                $this->installCli($cont_body->Id);
-                $this->installWoo($cont_body->Id, $url);
-            } else {
-                // retry
-                echo "No Id Found";
-            }
+            $cont_body = json_decode($cont->body(), true);
+            $cont_id = $cont_body["Id"];
+             if($cont_id !== null){
+                 Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $cont_id . '/start');
+                 $this->installCli($cont_id);
+                 $this->installWoo($cont_id, $url);
+             } else {
+                  // retry
+                 echo "No Id Found";
+             }
 
+             // Save site: url, container_id, credentials
+             $site = new Site();
+             $site->fill([
+                 'name' => $name,
+                 'container_id' => $cont_id,
+                 'db_user' => $credentials[0],
+                 'db_password' => $credentials[1],
+                 'db_name' => $credentials[2],
+                 'user_id' => $user->id
+             ]);
+             $site->saveQuietly();
 
-            // Save site: url, container_id, credentials
-            $site = new Site();
-            $site->fill([
-                'name' => $name,
-                'container_id' => $cont_body->Id,
-                'db_user' => $credentials[0],
-                'db_password' => $credentials[1],
-                'db_name' => $credentials[2],
-                'user_id' => $user->id
-            ]);
-            $site->saveQuietly();
-
-            $user->site_url = "https://" . $url . "/wp-json/rimplenet/v1";
-            $user->saveQuietly();
+             $user->site_url = "https://" . $url . "/wp-json/rimplenet/v1";
+             $user->saveQuietly();
 
             return true;
         } else {

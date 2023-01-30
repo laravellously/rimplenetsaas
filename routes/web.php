@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\PortainerController;
 use App\Http\Controllers\RimplenetController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,6 @@ Route::controller(RimplenetController::class)->name('rimplenet.')->middleware('w
     Route::view('wallets','theme::dashboard.wallets')->name('wallets');
     Route::view('transactions','theme::dashboard.transactions')->name('transactions');
 });
+
+
+Route::get('testing', [PortainerController::class, 'createWPContainer']);
