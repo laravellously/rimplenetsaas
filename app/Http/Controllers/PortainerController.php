@@ -76,6 +76,8 @@ class PortainerController extends Controller
             $body = json_decode($response->body());
 
             Cache::put('PORTAINER_JWT', $body->jwt, 60 * 60 * 8);
+
+            return $body->jwt;
         });
 
         return $jwt;
