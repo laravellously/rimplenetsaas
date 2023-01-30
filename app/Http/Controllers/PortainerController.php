@@ -32,9 +32,15 @@ class PortainerController extends Controller
                 ],
             ]);
             $cont_body = json_decode($cont->body());
-            Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $cont_body->Id . '/start');
-            $this->installCli($cont_body->Id);
-            $this->installWoo($cont_body->Id, $url);
+            echo $cont_body;
+            if($cont_body->Id !== null){
+                Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $cont_body->Id . '/start');
+                $this->installCli($cont_body->Id);
+                $this->installWoo($cont_body->Id, $url);
+            } else {
+                // retry
+            }
+
 
             // Save site: url, container_id, credentials
             $site = new Site();
