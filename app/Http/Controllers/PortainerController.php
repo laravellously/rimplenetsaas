@@ -31,29 +31,29 @@ class PortainerController extends Controller
             ]);
             $cont_body = json_decode($cont->body(), true);
             $cont_id = $cont_body["Id"];
-             if($cont_id !== null){
-                 Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $cont_id . '/start');
-                 $this->installCli($cont_id);
-                 $this->installWoo($cont_id, $url);
-             } else {
-                  // retry
-                 echo "No Id Found";
-             }
+            if ($cont_id !== null) {
+                Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $cont_id . '/start');
+                $this->installCli($cont_id);
+                $this->installWoo($cont_id, $url);
+            } else {
+                // retry
+                echo "No Id Found";
+            }
 
-             // Save site: url, container_id, credentials
-             $site = new Site();
-             $site->fill([
-                 'name' => $name,
-                 'container_id' => $cont_id,
-                 'db_user' => $credentials[0],
-                 'db_password' => $credentials[1],
-                 'db_name' => $credentials[2],
-                 'user_id' => $user->id
-             ]);
-             $site->saveQuietly();
+            // Save site: url, container_id, credentials
+            $site = new Site();
+            $site->fill([
+                'name' => $name,
+                'container_id' => $cont_id,
+                'db_user' => $credentials[0],
+                'db_password' => $credentials[1],
+                'db_name' => $credentials[2],
+                'user_id' => $user->id
+            ]);
+            $site->saveQuietly();
 
-             $user->site_url = "https://" . $url . "/wp-json/rimplenet/v1";
-             $user->saveQuietly();
+            $user->site_url = "https://" . $url . "/wp-json/rimplenet/v1";
+            $user->saveQuietly();
 
             return true;
         } else {
@@ -129,12 +129,12 @@ class PortainerController extends Controller
             $jwt = $this->getToken();
             $cont = Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $id . '/exec', [
                 'Cmd' => ["sh", "-c", "
-                    wp core install --url=https://".$url." --title=Rimplenet --admin_name=admin --admin_password=admin --admin_email=you@domain.com
+                    wp core install --url=https://" . $url . " --title=Rimplenet --admin_name=admin --admin_password=admin --admin_email=you@domain.com
                     wp rewrite structure '/%postname%/'
                     wp plugin delete hello
                     wp plugin delete akismet
                     wp plugin install woocommerce --activate
-                    wp plugin install ".env('RIMPLENET_PLUGIN_URL')." --activate
+                    wp plugin install " . env('RIMPLENET_PLUGIN_URL') . " --activate
                 "],
                 'User' => 'www-data',
             ]);

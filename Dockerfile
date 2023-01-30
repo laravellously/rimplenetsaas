@@ -1,4 +1,4 @@
-FROM webdevops/php-nginx:8.1
+FROM webdevops/php-nginx:8.1-alpine
 
 USER 1000
 
