@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 use TCG\Voyager\Facades\Voyager;
 use Wave\Facades\Wave;
 
+Route::get('testing', [PortainerController::class, 'createWPContainer']);
+
 // Authentication routes
 Auth::routes();
 
@@ -34,6 +36,3 @@ Route::controller(RimplenetController::class)->name('rimplenet.')->middleware('w
     Route::view('wallets','theme::dashboard.wallets')->name('wallets');
     Route::view('transactions','theme::dashboard.transactions')->name('transactions');
 });
-
-
-Route::get('testing', [PortainerController::class, 'createWPContainer']);
