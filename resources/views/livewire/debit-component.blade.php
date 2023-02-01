@@ -1,9 +1,9 @@
 <div>
-    {{-- The whole world belongs to you. --}}
+    {{-- If your happiness depends on money, you will never be happy with yourself. --}}
     <div class="flex flex-col mt-8">
         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                <button type="button" wire:click="createTestUser"
+                <button type="button" wire:click="createTestCredit"
                     class="inline-flex items-center px-4 py-2 my-3 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-wave-500 hover:bg-wave-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <svg class="w-5 h-5 mr-2 -ml-1" x-description="Heroicon name: solid/plus"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -11,55 +11,53 @@
                             d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                             clip-rule="evenodd"></path>
                     </svg>
-                    Create Test User
+                    Create Test Debit
                 </button>
                 <div class="mt-3 overflow-hidden shadow-sm ring-1 ring-black ring-opacity-5">
-                    @if ($users->isNotEmpty())
+                    @if ($debits->isNotEmpty())
                         <table class="min-w-full divide-y divide-gray-300">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th scope="col"
-                                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8">
-                                        Fullname</th>
+                                        class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                        ID</th>
                                     <th scope="col"
-                                        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                        Username</th>
+                                        class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                        Type</th>
                                     <th scope="col"
-                                        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                        Email</th>
+                                        class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                        Currency</th>
                                     <th scope="col"
-                                        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                        Created</th>
-                                    <th scope="col" class="relative py-3.5 pl-0 pr-4 sm:pr-6 lg:pr-8">
-                                        <span class="sr-only">Delete</span>
-                                    </th>
+                                        class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                        Amount</th>
+                                    <th scope="col"
+                                        class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                        Bal. Before</th>
+                                    <th scope="col"
+                                        class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                        Bal. After</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach ($users as $w)
+                                @foreach ($debits as $w)
                                     <tr wire:key="item-{{ $w->id }}">
-                                        <td
-                                            class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6 lg:pl-8">
-                                            {{ $w->first_name }} {{ $w->last_name }}</td>
-                                        <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                            {{ $w->username }}
-                                        </td>
-                                        <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                            {{ $w->user_email }}
-                                        </td>
-                                        <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                            {{ \Carbon\Carbon::parse($w->user_created_at)->diffForHumans() }}</td>
-                                        <td
-                                            class="relative py-4 pl-0 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6 lg:pr-8">
-                                            <button wire:click="deleteUser('{{ $w->id }}')"
-                                                class="px-6 bg-white border border-gray-300 rounded-md shadow-sm text-cyan-700 hover:text-cyan-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Delete<span
-                                                    class="sr-only"> @{{ $w - > username }}</span></button>
-                                        </td>
+                                        <td class="py-2 pl-4 pr-3 text-sm text-gray-500 whitespace-nowrap sm:pl-6">
+                                            #{{ $w->id }}</td>
+                                        <td class="px-2 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                            {{ $w->txn_type }}</td>
+                                        <td class="px-2 py-2 text-sm text-gray-900 whitespace-nowrap">
+                                            {{ $w->currency }}</td>
+                                        <td class="px-2 py-2 text-sm text-gray-500 whitespace-nowrap">
+                                            {{ $w->amount }}</td>
+                                        <td class="px-2 py-2 text-sm text-gray-500 whitespace-nowrap">
+                                            {{ $w->total_balance_before }}</td>
+                                        <td class="px-2 py-2 text-sm text-gray-500 whitespace-nowrap">
+                                            {{ $w->total_balance_after }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                        {{ $users->links('livewire::simple-tailwind') }}
+                        {{ $debits->links('livewire::simple-tailwind') }}
                     @else
                         <div class="py-16 text-center">
                             <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24"
@@ -69,12 +67,12 @@
                                     d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z">
                                 </path>
                             </svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900">No users</h3>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">No debits</h3>
                             <p class="mt-1 text-sm text-gray-500">
-                                Users created in your application will be displayed here.
+                                Debit transactions created in your application will be displayed here. To create a test debit transaction, first create a test user, then a test wallet, then send a POST request.
                             </p>
                             <div class="mt-6">
-                                <button type="button" wire:click="createTestUser"
+                                <button type="button" wire:click="createTestCredit"
                                     class="inline-flex items-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-wave-500 hover:bg-wave-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     <svg class="w-5 h-5 mr-2 -ml-1" x-description="Heroicon name: solid/plus"
                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -83,7 +81,7 @@
                                             d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                             clip-rule="evenodd"></path>
                                     </svg>
-                                    Create Test User
+                                    Create Test Debit
                                 </button>
                             </div>
                         </div>
@@ -97,20 +95,11 @@
 
 
 @section('javascript')
-
     <script>
-        Livewire.on('userDeleted', () => {
+        Livewire.on('debitCreated', () => {
             setTimeout(function() {
                 popToast("success", "Completed");
             }, 10);
         })
-
-        // Livewire.on('walletCreated', () => {
-        //     setTimeout(function() {
-        //         popToast("success", "Wallet created successfully!");
-        //     }, 5);
-        // })
-
     </script>
-
 @endsection

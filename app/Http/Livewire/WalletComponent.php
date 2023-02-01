@@ -16,11 +16,13 @@ class WalletComponent extends Component
 
     protected $listeners = ['walletDeleted' => 'render'];
 
-    public function getWallets(){
+    public function getWallets()
+    {
         return app(RimplenetController::class)->getWallets();
     }
 
-    public function deleteWallet($id){
+    public function deleteWallet($id)
+    {
         app(RimplenetController::class)->deleteWallet($id);
         $this->emit('walletDeleted');
     }

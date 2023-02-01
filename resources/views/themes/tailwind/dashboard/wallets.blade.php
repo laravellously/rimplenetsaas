@@ -18,7 +18,7 @@
                         </a>
                     </div>
                 </div>
-                @livewire('wallet-component', ['page' => 'main'])
+                @livewire('wallet-component')
             </div>
 
         </div>

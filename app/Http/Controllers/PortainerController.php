@@ -10,49 +10,59 @@ use Illuminate\Support\Str;
 
 class PortainerController extends Controller
 {
+    public function testFail()
+    {
+        return false;
+    }
+
     public function createWPContainer(User $user)
     {
         $credentials = $this->createMySQLDatabase();
         if ($credentials) {
-            $jwt = $this->getToken();
-            $name = Str::lower(Str::random(8));
-            $url = $name . ".kubectl.bluudigital.com";
-            $cont = Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/create?name=' . $name, [
-                'Image' => 'wordpress',
-                'Env' => [
-                    "WORDPRESS_CONFIG_EXTRA=define('FORCE_SSL_ADMIN', true);",
-                    "WORDPRESS_DB_HOST=65.108.95.193:6666",
-                    "WORDPRESS_DB_USER=" . $credentials[0],
-                    "WORDPRESS_DB_PASSWORD=" . $credentials[1],
-                    "WORDPRESS_DB_NAME=" . $credentials[2],
-                    "VIRTUAL_HOST=" . $url,
-                    "LETSENCRYPT_HOST=" . $url
-                ],
-            ]);
-            $cont_body = json_decode($cont->body());
-            $cont_id = $cont_body->Id;
-            Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $cont_id . '/start');
-            $this->installCli($cont_id);
-            $this->installWoo($cont_id, $url);
+            try {
+                $jwt = $this->getToken();
+                $name = Str::lower(Str::random(8));
+                $url = $name . ".kubectl.bluudigital.com";
+                $cont = Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/create?name=' . $name, [
+                    'Image' => 'wordpress',
+                    'Env' => [
+                        "WORDPRESS_CONFIG_EXTRA=define('FORCE_SSL_ADMIN', true);",
+                        "WORDPRESS_DB_HOST=65.108.95.193:6666",
+                        "WORDPRESS_DB_USER=" . $credentials[0],
+                        "WORDPRESS_DB_PASSWORD=" . $credentials[1],
+                        "WORDPRESS_DB_NAME=" . $credentials[2],
+                        "VIRTUAL_HOST=" . $url,
+                        "LETSENCRYPT_HOST=" . $url
+                    ],
+                ]);
+                $cont_body = json_decode($cont->body());
+                $cont_id = $cont_body->Id;
+                Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $cont_id . '/start');
+                sleep(10);
+                $this->installCli($cont_id);
+                $this->installWoo($cont_id, $url);
 
-            // Save site: url, container_id, credentials
-            $site = new Site();
-            $site->fill([
-                'name' => $name,
-                'container_id' => $cont_id,
-                'db_user' => $credentials[0],
-                'db_password' => $credentials[1],
-                'db_name' => $credentials[2],
-                'user_id' => $user->id
-            ]);
-            $site->saveQuietly();
+                // Save site: url, container_id, credentials
+                $site = new Site();
+                $site->fill([
+                    'name' => $name,
+                    'container_id' => $cont_id,
+                    'db_user' => $credentials[0],
+                    'db_password' => $credentials[1],
+                    'db_name' => $credentials[2],
+                    'user_id' => $user->id
+                ]);
+                $site->saveQuietly();
 
-            $user->site_url = "https://" . $url . "/wp-json/rimplenet/v1";
-            $user->saveQuietly();
-
-            return true;
+                // create a new api key
+                $user->createApiKey('rimplenet_default');
+                $user->site_url = "https://" . $url . "/wp-json/rimplenet/v1";
+                $user->saveQuietly();
+            } catch (\Throwable $th) {
+                throw new \Exception('Error Install WP Container: ' . $th->getMessage());
+            }
         } else {
-            return false;
+            throw new \Exception("No DB Credentials");
         }
     }
 
@@ -115,15 +125,18 @@ class PortainerController extends Controller
                 $db_name
             ];
         } catch (\Exception $e) {
-            return false;
+            throw new \Exception('Error Creating DB: ' . $e->getMessage());
         }
     }
 
-    private function installWoo($id, $url)
+    public function installWoo($id = '08dbf024e0b0e8aae4e0677eca4bf37c7f55c12fcb50c1574610855d162e5623', $url = 'csfmpsk4.kubectl.bluudigital.com')
     {
         try {
             $jwt = $this->getToken();
             $cont = Http::withToken($jwt)->post(env('PORTAINER_URL') . '/api/endpoints/2/docker/containers/' . $id . '/exec', [
+                "AttachStdin" => false,
+                "AttachStdout" => true,
+                "AttachStderr" => true,
                 'Cmd' => ["sh", "-c", "
                     wp core install --url=https://" . $url . " --title=Rimplenet --admin_name=admin --admin_password=admin --admin_email=you@domain.com
                     wp rewrite structure '/%postname%/'
@@ -140,10 +153,11 @@ class PortainerController extends Controller
                     "Detach" => false,
                     "Tty" => false
                 ]);
+            } else {
+                report($cont);
             }
-            return true;
         } catch (\Exception $e) {
-            return false;
+            throw new \Exception('Error Install Woo: ' . $e->getMessage());
         }
     }
 
@@ -173,7 +187,7 @@ class PortainerController extends Controller
             }
             return true;
         } catch (\Exception $e) {
-            return false;
+            throw new \Exception('Error Install CLI: ' . $e->getMessage());
         }
     }
 }

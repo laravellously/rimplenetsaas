@@ -11,14 +11,10 @@
 |
 */
 
-use App\Http\Controllers\PortainerController;
-use App\Http\Controllers\RimplenetController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use TCG\Voyager\Facades\Voyager;
 use Wave\Facades\Wave;
-
-Route::get('testing', [PortainerController::class, 'createWPContainer']);
 
 // Authentication routes
 Auth::routes();
@@ -31,8 +27,10 @@ Route::group(['prefix' => config('voyager.prefix', 'admin')], function () {
 // Wave routes
 Wave::routes();
 
-Route::controller(RimplenetController::class)->name('rimplenet.')->middleware('wave')->group(function () {
+Route::middleware('wave')->name('rimplenet.')->group(function () {
     Route::view('users', 'theme::dashboard.users')->name('users');
     Route::view('wallets','theme::dashboard.wallets')->name('wallets');
-    Route::view('transactions','theme::dashboard.transactions')->name('transactions');
+    Route::view('credits','theme::dashboard.transactions')->name('credits');
+    Route::view('debits','theme::dashboard.transactions')->name('debits');
+    Route::view('transfers','theme::dashboard.transactions')->name('transfers');
 });

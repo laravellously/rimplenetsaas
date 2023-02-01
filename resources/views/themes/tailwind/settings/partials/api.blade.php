@@ -1,5 +1,5 @@
 <div class="flex flex-col px-10 py-8">
-	<form action="{{ route('wave.settings.api.post') }}" method="POST">
+	{{-- <form action="{{ route('wave.settings.api.post') }}" method="POST">
 		<div>
 			<label for="key_name" class="block text-sm font-medium leading-5 text-gray-700">Create a new API Key</label>
 			<div class="mt-1 rounded-md shadow-sm">
@@ -13,10 +13,10 @@
 
 		{{ csrf_field() }}
 	</form>
-	<hr class="my-12 border-gray-200">
+	<hr class="my-12 border-gray-200"> --}}
 	@if(count(auth()->user()->apiKeys) > 0)
 
-		<p class="block text-sm font-medium leading-5 text-gray-700">Current API Keys</p>
+		{{-- <p class="block text-sm font-medium leading-5 text-gray-700">Current API Keys</p> --}}
 
 		<div class="mt-2 overflow-hidden border border-gray-150 sm:rounded">
 			<table class="min-w-full divide-y divide-gray-200">
@@ -51,12 +51,12 @@
 								<button x-data onclick="actionClicked('view', '{{ $apiKey->id }}', '{{ $apiKey->name }}', '{{ $apiKey->key }}')" class="mr-2 text-indigo-600 hover:underline focus:outline-none">
 									View
 								</button>
-								<button onclick="actionClicked('edit', '{{ $apiKey->id }}', '{{ $apiKey->name }}', '{{ $apiKey->key }}');" class="mr-2 text-indigo-600 hover:underline focus:outline-none">
+								{{-- <button onclick="actionClicked('edit', '{{ $apiKey->id }}', '{{ $apiKey->name }}', '{{ $apiKey->key }}');" class="mr-2 text-indigo-600 hover:underline focus:outline-none">
 									Edit
 								</button>
 								<button onclick="actionClicked('delete', '{{ $apiKey->id }}', '{{ $apiKey->name }}', '{{ $apiKey->key }}');" class="text-indigo-600 hover:underline focus:outline-none">
 									Delete
-								</button>
+								</button> --}}
 							</td>
 						</tr>
 					@endforeach

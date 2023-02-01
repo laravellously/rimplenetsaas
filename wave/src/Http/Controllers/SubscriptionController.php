@@ -127,8 +127,6 @@ class SubscriptionController extends Controller
                     } else {
                         $user = auth()->user();
                     }
-                     // create a new api key
-                    $user->createApiKey('rimplenet_default');
 
                     $plan = Plan::where('plan_id', $subscription->plan_id)->first();
 

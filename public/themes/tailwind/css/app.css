@@ -1230,6 +1230,9 @@ select {
 .left-0 {
   left: 0px;
 }
+.left-1\/2 {
+  left: 50%;
+}
 .right-0 {
   right: 0px;
 }
@@ -1238,9 +1241,6 @@ select {
 }
 .top-1\/2 {
   top: 50%;
-}
-.left-1\/2 {
-  left: 50%;
 }
 .z-20 {
   z-index: 20;
@@ -1565,6 +1565,9 @@ select {
 .w-8 {
   width: 2rem;
 }
+.w-screen {
+  width: 100vw;
+}
 .w-56 {
   width: 14rem;
 }
@@ -1606,6 +1609,9 @@ select {
 }
 .max-w-lg {
   max-width: 32rem;
+}
+.max-w-xs {
+  max-width: 20rem;
 }
 .max-w-sm {
   max-width: 24rem;
@@ -1734,6 +1740,9 @@ select {
 .gap-5 {
   gap: 1.25rem;
 }
+.gap-6 {
+  gap: 1.5rem;
+}
 .gap-y-10 {
   row-gap: 2.5rem;
 }
@@ -1759,6 +1768,11 @@ select {
   --tw-space-x-reverse: 0;
   margin-right: calc(2rem * var(--tw-space-x-reverse));
   margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
+}
+.space-y-1 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
 }
 .space-x-10 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
@@ -2202,10 +2216,6 @@ select {
   padding-top: 0.875rem;
   padding-bottom: 0.875rem;
 }
-.py-4 {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
 .px-1 {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
@@ -2221,6 +2231,10 @@ select {
 .px-0 {
   padding-left: 0px;
   padding-right: 0px;
+}
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 .py-5 {
   padding-top: 1.25rem;
@@ -2699,11 +2713,11 @@ select {
 .duration-75 {
   transition-duration: 75ms;
 }
-.duration-100 {
-  transition-duration: 100ms;
-}
 .duration-200 {
   transition-duration: 200ms;
+}
+.duration-100 {
+  transition-duration: 100ms;
 }
 .ease-out {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
@@ -3386,6 +3400,10 @@ svg {
     justify-content: center;
   }
 
+  .sm\:gap-4 {
+    gap: 1rem;
+  }
+
   .sm\:gap-x-8 {
     -moz-column-gap: 2rem;
          column-gap: 2rem;
@@ -3406,6 +3424,10 @@ svg {
   .sm\:border-gray-200 {
     --tw-border-opacity: 1;
     border-color: rgb(229 231 235 / var(--tw-border-opacity));
+  }
+
+  .sm\:p-4 {
+    padding: 1rem;
   }
 
   .sm\:p-6 {
@@ -3429,6 +3451,11 @@ svg {
   .sm\:px-10 {
     padding-left: 2.5rem;
     padding-right: 2.5rem;
+  }
+
+  .sm\:px-0 {
+    padding-left: 0px;
+    padding-right: 0px;
   }
 
   .sm\:pt-10 {

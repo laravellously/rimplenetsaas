@@ -218,34 +218,7 @@
                 </div>
 
             </div>
-            <div class="py-16">
-                <div class="text-center">
-                    <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" aria-hidden="true">
-                        <path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z">
-                        </path>
-                    </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No users</h3>
-                    <p class="mt-1 text-sm text-gray-500">
-                        Users created in your app will be created here.
-                    </p>
-                    <div class="mt-6">
-                        <button type="button"
-                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-wave-500 hover:bg-wave-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            <svg class="w-5 h-5 mr-2 -ml-1" x-description="Heroicon name: solid/plus"
-                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                            Create Test User
-                        </button>
-                    </div>
-                </div>
-            </div>
+            @livewire('user-component')
         </div>
 
     </div>
