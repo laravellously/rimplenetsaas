@@ -32,7 +32,6 @@ class RimplenetController extends Controller
     {
         $resp = Http::get(auth()->user()->site_url . '/users');
         $body = json_decode($resp->body());
-        // dump($body);
         $count = $body->status_code == 404 ? 0 : $body->data->others->totalUsers;
         return $count;
     }
@@ -52,17 +51,12 @@ class RimplenetController extends Controller
             'username' => $rnd
         ]);
         $body = json_decode($resp->body());
+        logger("Create Test User:: " . $body->message);
         if ($body->status_code == 200) {
             return true;
         } else {
-            report($body->message);
             return false;
         }
-    }
-
-    public function loginUser()
-    {
-        //
     }
 
     // Wallets
@@ -96,10 +90,10 @@ class RimplenetController extends Controller
             'wallet_type' => 'fiat'
         ]);
         $body = json_decode($resp->body());
+        logger("Create Test Wallet:: " . $body->message);
         if ($body->status_code == 200) {
             return true;
         } else {
-            report($body->message);
             return false;
         }
     }
@@ -122,10 +116,11 @@ class RimplenetController extends Controller
             'note' => 'Test Credit'
         ]);
         $body = json_decode($resp->body());
+        dump($body);
+        // logger("Create Test Credit:: " . $body->message);
         if ($body->status_code == 200) {
             return true;
         } else {
-            report($body->message);
             return false;
         }
     }
@@ -147,6 +142,7 @@ class RimplenetController extends Controller
             'note' => 'Test Debit'
         ]);
         $body = json_decode($resp->body());
+        logger("Create Test Debit:: " . $body->message);
         if ($body->status_code == 200) {
             return true;
         } else {
@@ -172,6 +168,7 @@ class RimplenetController extends Controller
             'note' => 'Test Transfer'
         ]);
         $body = json_decode($resp->body());
+        logger("Create Test Transfer:: " . $body->message);
         if ($body->status_code == 200) {
             return true;
         } else {

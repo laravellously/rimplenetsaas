@@ -19,8 +19,12 @@ class UserComponent extends Component
 
     public function createTestUser()
     {
-        app(RimplenetController::class)->createTestUser();
-        $this->emit('userDeleted');
+        $created = app(RimplenetController::class)->createTestUser();
+        if ($created) {
+            $this->emit('userDeleted');
+        } else {
+            $this->emitSelf('userNotCreated');
+        }
     }
 
     public function render()

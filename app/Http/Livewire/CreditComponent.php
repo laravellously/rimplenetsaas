@@ -22,7 +22,11 @@ class CreditComponent extends Component
 
     public function createTestCredit()
     {
-        app(RimplenetController::class)->createTestCredit();
-        $this->emit('creditCreated');
+        $created = app(RimplenetController::class)->createTestCredit();
+        if ($created) {
+            $this->emit('creditCreated');
+        } else {
+            $this->emitSelf('creditNotCreated');
+        }
     }
 }

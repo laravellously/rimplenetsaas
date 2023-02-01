@@ -101,5 +101,10 @@
                 popToast("success", "Completed");
             }, 10);
         })
+        Livewire.on('debitNotCreated', () => {
+            setTimeout(function() {
+                popToast("danger", "Debit was NOT created!");
+            }, 10);
+        })
     </script>
 @endsection

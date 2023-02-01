@@ -22,7 +22,11 @@ class TransferComponent extends Component
 
     public function createTestTransfer()
     {
-        app(RimplenetController::class)->createTestTransfer();
-        $this->emit('transferCreated');
+        $created = app(RimplenetController::class)->createTestTransfer();
+        if ($created) {
+            $this->emit('transferCreated');
+        } else {
+            $this->emitSelf('transferNotCreated');
+        }
     }
 }

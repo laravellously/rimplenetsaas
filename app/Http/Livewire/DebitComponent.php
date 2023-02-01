@@ -22,7 +22,11 @@ class DebitComponent extends Component
 
     public function createTestCredit()
     {
-        app(RimplenetController::class)->createTestDebit();
-        $this->emit('debitCreated');
+        $created = app(RimplenetController::class)->createTestDebit();
+        if ($created) {
+            $this->emit('debitCreated');
+        } else {
+            $this->emitSelf('debitNotCreated');
+        }
     }
 }

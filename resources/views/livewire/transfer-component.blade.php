@@ -106,5 +106,10 @@
                 popToast("success", "Completed");
             }, 10);
         })
+        Livewire.on('transferNotCreated', () => {
+            setTimeout(function() {
+                popToast("danger", "Transfer was NOT created!");
+            }, 10);
+        })
     </script>
 @endsection

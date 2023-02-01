@@ -105,11 +105,11 @@
             }, 10);
         })
 
-        // Livewire.on('walletCreated', () => {
-        //     setTimeout(function() {
-        //         popToast("success", "Wallet created successfully!");
-        //     }, 5);
-        // })
+        Livewire.on('userNotCreated', () => {
+            setTimeout(function() {
+                popToast("danger", "User was NOT created!!");
+            }, 5);
+        })
 
     </script>
 
