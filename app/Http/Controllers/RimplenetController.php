@@ -46,17 +46,18 @@ class RimplenetController extends Controller
     public function createTestUser()
     {
         $rnd = Str::lower(Str::random(6));
-        try {
-            Http::post(Auth::user()->site_url . '/users', [
-                'user_email' => $rnd . '@rimplenet.com',
-                'user_password' => 'ch@ngeme0bvi0usly',
-                'username' => $rnd
-            ]);
+        $resp = Http::post(Auth::user()->site_url . '/users', [
+            'user_email' => $rnd . '@rimplenet.com',
+            'user_password' => 'ch@ngeme0bvi0usly',
+            'username' => $rnd
+        ]);
+        $body = json_decode($resp->body());
+        if ($body->status_code == 200) {
             return true;
-        } catch (\Throwable $th) {
-            throw $th;
+        } else {
+            report($body->message);
+            return false;
         }
-        return true;
     }
 
     public function loginUser()
@@ -94,7 +95,13 @@ class RimplenetController extends Controller
             'wallet_note' => 'Test Wallet - ' . Str::random(6),
             'wallet_type' => 'fiat'
         ]);
-        return true;
+        $body = json_decode($resp->body());
+        if ($body->status_code == 200) {
+            return true;
+        } else {
+            report($body->message);
+            return false;
+        }
     }
 
     // Transactions
@@ -107,14 +114,20 @@ class RimplenetController extends Controller
 
     public function createTestCredit()
     {
-        Http::post(Auth::user()->site_url . '/credits', [
+        $resp = Http::post(Auth::user()->site_url . '/credits', [
             'user_id' => 6,
             'wallet_id' => 'tuel',
             'request_id' => Str::random(),
             'amount' => 100,
             'note' => 'Test Credit'
         ]);
-        return true;
+        $body = json_decode($resp->body());
+        if ($body->status_code == 200) {
+            return true;
+        } else {
+            report($body->message);
+            return false;
+        }
     }
 
     public function listDebits()
@@ -133,7 +146,13 @@ class RimplenetController extends Controller
             'amount' => 10,
             'note' => 'Test Debit'
         ]);
-        return true;
+        $body = json_decode($resp->body());
+        if ($body->status_code == 200) {
+            return true;
+        } else {
+            report($body->message);
+            return false;
+        }
     }
 
     public function listTransfers()
@@ -145,28 +164,30 @@ class RimplenetController extends Controller
 
     public function createTestTransfer()
     {
-        Http::post(Auth::user()->site_url . '/transfers', [
+        $resp = Http::post(Auth::user()->site_url . '/transfers', [
             'transfer_from_user' => 6,
             'wallet_id' => 'tuel',
             'transfer_to_user' => 5,
             'amount_to_transfer' => 10,
             'note' => 'Test Transfer'
         ]);
-        return true;
+        $body = json_decode($resp->body());
+        if ($body->status_code == 200) {
+            return true;
+        } else {
+            report($body->message);
+            return false;
+        }
     }
 
     // API Functions
     public function apiLoginUser(APILoginUserRequest $request)
     {
-        $resp = Http::post(Auth::user()->site_url . '/user/login', [
-            'user_email' => $request->user_email,
-            'user_password' => $request->user_password,
-            'token_expiration' => 60
-        ]);
+        $validated = $request->validated();
+        $resp = Http::post(Auth::user()->site_url . '/users/login', $validated);
         $body = json_decode($resp->body());
         return response()->json([
-            'name' => 'Abigail',
-            'state' => 'CA',
+            'response' => $body
         ]);
     }
 

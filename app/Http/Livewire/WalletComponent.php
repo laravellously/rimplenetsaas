@@ -14,12 +14,9 @@ class WalletComponent extends Component
 {
     use WithPagination;
 
-    protected $listeners = ['walletDeleted' => 'render'];
-
-    public function getWallets()
-    {
-        return app(RimplenetController::class)->getWallets();
-    }
+    protected $listeners = [
+        'walletDeleted' => 'render'
+    ];
 
     public function deleteWallet($id)
     {
@@ -29,13 +26,17 @@ class WalletComponent extends Component
 
     public function createTestWallet()
     {
-        app(RimplenetController::class)->createTestWallet();
-        $this->emit('walletDeleted');
+        $created = app(RimplenetController::class)->createTestWallet();
+        if ($created) {
+            $this->emit('walletDeleted');
+        } else {
+            $this->emit('walletNotCreated');
+        }
     }
 
     public function render()
     {
-        $wallets = $this->getWallets();
+        $wallets = app(RimplenetController::class)->getWallets();
         return view('livewire.wallet-component', [
             "wallets" => $wallets
         ]);

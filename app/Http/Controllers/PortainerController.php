@@ -129,7 +129,7 @@ class PortainerController extends Controller
         }
     }
 
-    public function installWoo($id = '08dbf024e0b0e8aae4e0677eca4bf37c7f55c12fcb50c1574610855d162e5623', $url = 'csfmpsk4.kubectl.bluudigital.com')
+    public function installWoo($id, $url)
     {
         try {
             $jwt = $this->getToken();
