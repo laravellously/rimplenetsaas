@@ -3,17 +3,19 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class APICreateTransferRequest extends FormRequest
 {
-    /**
+       /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
     public function authorize()
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -24,7 +26,34 @@ class APICreateTransferRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'transfer_from_user' => 'required|integer',
+            'transfer_to_user' => 'required|integer',
+            'wallet_id' => 'required|string',
+            'amount_to_transfer' => 'required|integer',
+            'note' => 'string'
         ];
     }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success'   => false,
+            'message'   => 'Validation errors',
+            'data'      => $validator->errors()
+        ], 400));
+    }
+
+    /* Handle a failed authorization attempt.
+    *
+    * @return void
+    *
+    * @throws \Illuminate\Auth\Access\AuthorizationException
+    */
+   protected function failedAuthorization()
+   {
+       throw new HttpResponseException(response()->json([
+        'success'   => false,
+        'message'   => 'Forbidden',
+    ], 403));
+   }
 }

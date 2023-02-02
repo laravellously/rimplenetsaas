@@ -26,7 +26,7 @@ class TransferComponent extends Component
         if ($created) {
             $this->emit('transferCreated');
         } else {
-            $this->emitSelf('transferNotCreated');
+            $this->emit('transferNotCreated');
         }
     }
 }

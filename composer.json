@@ -11,6 +11,7 @@
         "php": "^8.0.2",
         "ext-exif": "*",
         "ext-gd": "*",
+        "asantibanez/livewire-charts": "^2.5",
         "devdojo/app": "0.11.0",
         "devdojo/themes": "0.0.7",
         "guzzlehttp/guzzle": "^7.2",
@@ -19,9 +20,9 @@
         "laravel/framework": "^9.11",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.4",
+        "php-open-source-saver/jwt-auth": "^2.0",
         "sentry/sentry-laravel": "^3.1",
-        "tcg/voyager": "1.5.x-dev",
-        "tymon/jwt-auth": "@dev"
+        "tcg/voyager": "1.5.x-dev"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

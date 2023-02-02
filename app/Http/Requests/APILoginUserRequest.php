@@ -15,7 +15,7 @@ class APILoginUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -53,5 +53,19 @@ class APILoginUserRequest extends FormRequest
             'user_email.required' => 'Email is required',
             'user_password.required' => 'Password is required',
         ];
+    }
+
+    /* Handle a failed authorization attempt.
+    *
+    * @return void
+    *
+    * @throws \Illuminate\Auth\Access\AuthorizationException
+    */
+    protected function failedAuthorization()
+    {
+        throw new HttpResponseException(response()->json([
+         'success'   => false,
+         'message'   => 'Forbidden',
+     ], 403));
     }
 }

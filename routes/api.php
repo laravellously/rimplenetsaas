@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\RimplenetController;
 use Illuminate\Support\Facades\Route;
-use Wave\Facades\Wave;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +15,20 @@ use Wave\Facades\Wave;
 |
 */
 
-
-Route::middleware('auth:api')->get('/user', function () {
-    return auth()->user();
+Route::middleware('jwt.verify')->get('/', function() {
+    $data = [
+        'message' => "Welcome to our API"
+    ];
+    return response()->json($data, 200);
 });
 
-Route::controller(RimplenetController::class)->name('api.rimplenet.')->middleware('auth:api')->group(function () {
+Route::post('token', [AuthController::class, 'token']);
+Route::post('logout', [AuthController::class, 'logout']);
+Route::post('refresh', [AuthController::class, 'refresh']);
+
+Route::middleware('jwt.verify')->get('/me', [AuthController::class, 'getUser']);
+
+Route::controller(RimplenetController::class)->name('api.rimplenet.')->middleware('jwt.verify')->group(function () {
     Route::post('user-login', 'apiLoginUser')->name('user-login');
     Route::post('user-register', 'apiRegisterUser')->name('user-register');
 
@@ -30,4 +38,4 @@ Route::controller(RimplenetController::class)->name('api.rimplenet.')->middlewar
     Route::post('create-transfer','apiCreateTransfer')->name('create-transfer');
 });
 
-Wave::api();
+// Wave::api();

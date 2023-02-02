@@ -2,14 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Notifications\Notifiable;
 use Wave\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -44,4 +40,5 @@ class User extends Authenticatable
     protected $casts = [
         'trial_ends_at' => 'datetime',
     ];
+
 }

@@ -23,7 +23,7 @@ class UserComponent extends Component
         if ($created) {
             $this->emit('userDeleted');
         } else {
-            $this->emitSelf('userNotCreated');
+            $this->emit('userNotCreated');
         }
     }
 

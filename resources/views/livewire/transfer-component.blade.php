@@ -3,16 +3,6 @@
     <div class="flex flex-col mt-8">
         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                <button type="button" wire:click="createTestTransfer"
-                    class="inline-flex items-center px-4 py-2 my-3 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-wave-500 hover:bg-wave-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <svg class="w-5 h-5 mr-2 -ml-1" x-description="Heroicon name: solid/plus"
-                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd"
-                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                    Create Test Transfer
-                </button>
                 <div class="mt-3 overflow-hidden shadow-sm ring-1 ring-black ring-opacity-5">
                     @if ($transfers->isNotEmpty())
                         <table class="min-w-full divide-y divide-gray-300">
@@ -77,7 +67,7 @@
                                 Transfers created in your application will be displayed here. To create a test debit transaction, first create a test user, then a test wallet, then send a POST request.
                             </p>
                             <div class="mt-6">
-                                <button type="button" wire:click="createTestTransfer"
+                                <button type="button" wire:click="createTestTransfer" wire:loading.attr="disabled"
                                     class="inline-flex items-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-wave-500 hover:bg-wave-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     <svg class="w-5 h-5 mr-2 -ml-1" x-description="Heroicon name: solid/plus"
                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"

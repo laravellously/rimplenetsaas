@@ -30,7 +30,7 @@ class WalletComponent extends Component
         if ($created) {
             $this->emit('walletDeleted');
         } else {
-            $this->emitSelf('walletNotCreated');
+            $this->emit('walletNotCreated');
         }
     }
 

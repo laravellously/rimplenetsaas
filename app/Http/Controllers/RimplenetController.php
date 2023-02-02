@@ -82,20 +82,26 @@ class RimplenetController extends Controller
 
     public function createTestWallet()
     {
-        $resp = Http::post(Auth::user()->site_url . '/wallets', [
-            'wallet_name' => 'Test Wallet',
-            'wallet_id' => Str::random(4),
-            'wallet_symbol' => '$',
-            'wallet_note' => 'Test Wallet - ' . Str::random(6),
-            'wallet_type' => 'fiat'
-        ]);
-        $body = json_decode($resp->body());
-        logger("Create Test Wallet:: " . $body->message);
-        if ($body->status_code == 200) {
-            return true;
-        } else {
-            return false;
+        $seed = [
+            'naira' => ['wallet_id' => 'naira', 'symbol' => 'N'],
+            'cedis' => ['wallet_id' => 'cedis', 'symbol' => 'C'],
+            'francs' => ['wallet_id' => 'francs', 'symbol' => 'F'],
+            'yen' => ['wallet_id' => 'yen', 'symbol' => 'Y'],
+            'usd' => ['wallet_id' => 'usd', 'symbol' => '$']
+        ];
+
+        foreach ($seed as $s) {
+            $resp = Http::post(Auth::user()->site_url . '/wallets', [
+                'wallet_name' => Str::ucfirst($s['wallet_id']) . ' Test Wallet',
+                'wallet_id' => $s['wallet_id'],
+                'wallet_symbol' => $s['symbol'],
+                'wallet_note' => Str::ucfirst($s['wallet_id']) . ' Test Wallet',
+                'wallet_type' => 'fiat'
+            ]);
+            $body = json_decode($resp->body());
+            logger("Created ". Str::ucfirst($s['wallet_id']) . ' Test Wallet ::' . $body->message);
         }
+        return true;
     }
 
     // Transactions
@@ -109,15 +115,14 @@ class RimplenetController extends Controller
     public function createTestCredit()
     {
         $resp = Http::post(Auth::user()->site_url . '/credits', [
-            'user_id' => 6,
-            'wallet_id' => 'tuel',
+            'user_id' => 2,
+            'wallet_id' => 'usd',
             'request_id' => Str::random(),
             'amount' => 100,
             'note' => 'Test Credit'
         ]);
         $body = json_decode($resp->body());
-        dump($body);
-        // logger("Create Test Credit:: " . $body->message);
+        logger("Create Test Credit:: " . $body->message);
         if ($body->status_code == 200) {
             return true;
         } else {
@@ -135,8 +140,8 @@ class RimplenetController extends Controller
     public function createTestDebit()
     {
         $resp = Http::post(Auth::user()->site_url . '/debits', [
-            'user_id' => 6,
-            'wallet_id' => 'tuel',
+            'user_id' => 2,
+            'wallet_id' => 'usd',
             'request_id' => Str::random(),
             'amount' => 10,
             'note' => 'Test Debit'
@@ -161,9 +166,9 @@ class RimplenetController extends Controller
     public function createTestTransfer()
     {
         $resp = Http::post(Auth::user()->site_url . '/transfers', [
-            'transfer_from_user' => 6,
-            'wallet_id' => 'tuel',
-            'transfer_to_user' => 5,
+            'transfer_from_user' => 2,
+            'wallet_id' => 'usd',
+            'transfer_to_user' => 3,
             'amount_to_transfer' => 10,
             'note' => 'Test Transfer'
         ]);
@@ -184,47 +189,86 @@ class RimplenetController extends Controller
         $resp = Http::post(Auth::user()->site_url . '/users/login', $validated);
         $body = json_decode($resp->body());
         return response()->json([
-            'response' => $body
-        ]);
+            'message' => $body->message,
+            'data' => $body->status ? $body->data : ['An error occured']
+        ], $body->status_code);
     }
 
     public function apiRegisterUser(APIRegisterUserRequest $request)
     {
+        $validated = $request->validated();
+        $resp = Http::post(Auth::user()->site_url . '/users', $validated);
+        $body = json_decode($resp->body());
         return response()->json([
-            'name' => 'Abigail',
-            'state' => 'CA',
-        ]);
+            'message' => $body->message,
+            'response' => $body
+        ], 200);
     }
 
     public function apiCreateCredit(APICreateCreditRequest $request)
     {
-        return response()->json([
-            'name' => 'Abigail',
-            'state' => 'CA',
+        $validated = $request->validated();
+        $resp = Http::post(Auth::user()->site_url . '/credits', [
+            'user_id' => $validated['user_id'],
+            'wallet_id' => $validated['wallet_id'],
+            'request_id' => Str::random(),
+            'amount' => $validated['amount'],
+            'note' => $validated['note']
         ]);
+        $body = json_decode($resp->body());
+        return response()->json([
+            'message' => $body->message,
+            'response' => $body
+        ], 200);
     }
 
     public function apiCreateDebit(APICreateDebitRequest $request)
     {
-        return response()->json([
-            'name' => 'Abigail',
-            'state' => 'CA',
+        $validated = $request->validated();
+        $resp = Http::post(Auth::user()->site_url . '/debits', [
+            'user_id' => $validated['user_id'],
+            'wallet_id' => $validated['wallet_id'],
+            'request_id' => Str::random(),
+            'amount' => $validated['amount'],
+            'note' => $validated['note']
         ]);
+        $body = json_decode($resp->body());
+        return response()->json([
+            'message' => $body->message,
+            'response' => $body
+        ], 200);
     }
 
     public function apiCreateWallet(APICreateWalletRequest $request)
     {
+        $validated = $request->validated();
+        $resp = Http::post(Auth::user()->site_url . '/wallets', [
+            'wallet_name' => Str::ucfirst($validated['wallet_name']),
+            'wallet_id' => $validated['wallet_id'],
+            'wallet_symbol' => $validated['wallet_symbol'],
+            'wallet_note' => Str::ucfirst($validated['wallet_note']) . ' Wallet Created via API',
+            'wallet_type' => $validated['wallet_type']
+        ]);
+        $body = json_decode($resp->body());
         return response()->json([
-            'name' => 'Abigail',
-            'state' => 'CA',
+            'response' => $body
         ]);
     }
 
     public function apiCreateTransfer(APICreateTransferRequest $request)
     {
-        return response()->json([
-            'name' => 'Abigail',
-            'state' => 'CA',
+        $validated = $request->validated();
+        $resp = Http::post(Auth::user()->site_url . '/transfers', [
+            'transfer_from_user' => $validated['transfer_from_user'],
+            'wallet_id' => $validated['wallet_id'],
+            'transfer_to_user' => $validated['transfer_to_user'],
+            'amount_to_transfer' => $validated['amount_to_transfer'],
+            'note' => $validated['note']
         ]);
+        $body = json_decode($resp->body());
+        return response()->json([
+            'message' => $body->message,
+            'response' => $body
+        ], 200);
     }
 }

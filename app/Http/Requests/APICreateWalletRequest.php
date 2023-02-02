@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class APICreateWalletRequest extends FormRequest
 {
@@ -13,7 +15,7 @@ class APICreateWalletRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -24,7 +26,36 @@ class APICreateWalletRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'wallet_name' => 'required|string',
+            'wallet_id' => 'required|string',
+            'wallet_symbol' => 'required|string',
+            'wallet_note' => 'required|string',
+            'wallet_type' => 'required|string'
         ];
+    }
+
+    public function failedValidation(Validator $validator)
+
+    {
+
+        throw new HttpResponseException(response()->json([
+            'success'   => false,
+            'message'   => 'Validation errors',
+            'data'      => $validator->errors()
+        ], 400));
+    }
+
+    /* Handle a failed authorization attempt.
+    *
+    * @return void
+    *
+    * @throws \Illuminate\Auth\Access\AuthorizationException
+    */
+    protected function failedAuthorization()
+    {
+        throw new HttpResponseException(response()->json([
+         'success'   => false,
+         'message'   => 'Forbidden',
+     ], 403));
     }
 }

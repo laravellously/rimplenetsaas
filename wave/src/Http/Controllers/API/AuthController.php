@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use TCG\Voyager\Models\Role;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Wave\ApiKey;
 use App\Models\User;
 
@@ -58,18 +58,21 @@ class AuthController extends Controller
 
             $key = ApiKey::where('key', '=', $request->key)->first();
 
-            $key->update([
-                'last_used_at' => Carbon::now(),
-            ]);
-
             if(isset($key->id)){
+                $key->update([
+                    'last_used_at' => Carbon::now(),
+                ]);
                 return response()->json(['access_token' => JWTAuth::fromUser($key->user, ['exp' => config('wave.api.key_token_expires', 1)])]);
             } else {
-                abort('400', 'Invalid Api Key');
+                return response()->json([
+                    'message' => 'Invalid API Key'
+                ], 400);
             }
 
         } else {
-            abort('401', 'Unauthorized');
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
         }
 
     }
@@ -102,6 +105,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        $request->bearerToken();
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:250',

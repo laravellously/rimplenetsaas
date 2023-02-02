@@ -5,7 +5,7 @@ namespace Wave\Http\Middleware;
 use Closure;
 //use Illuminate\Support\Facades\Auth;
 use Wave\ApiToken;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 use Illuminate\Contracts\Auth\Factory as Auth;
 
